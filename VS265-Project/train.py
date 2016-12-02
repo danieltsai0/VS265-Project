@@ -1,1 +1,0 @@
-def train_model(model, data)
