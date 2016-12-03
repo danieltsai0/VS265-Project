@@ -7,6 +7,7 @@ import numpy as np
 
 
 types_of_data = ["gaussian", "1/f", "1/f2", "equalized", "natural"]
+n_neighbors = []
 data_pickle_suffix = "_data.pickle"
 patches_pickle_suffix = "_patches.pickle"
 natural_image_dir = "..\\Data\\vanhateren_imc"
@@ -23,17 +24,33 @@ Loads a numpy dataset and return it.
 def load_dataset(tod, n_neighbors):
 	return np.load(filename)
 
+def load_patches(tod):
+	raise NotImplementedError 
+
 def find_nearest_neighbor(patch, Np):
 	return np.min([np.linalg.norm(patch - npatch) for npatch in Np])
 
-def entropy_est(k, d, logN):
+
+"""
+Estimates the entropy of a given set of distances.
+
+Arguments: 
+	k - dimension of _________________________________
+	d - array of arrays (each representing a different N)
+
+Returns: 
+	array of estimated entropy of target patches for each N
+"""
+def entropy_est(k, d):
 	A_div_k = k * math.pi**(k/2) / func_Gamma(k/2 + 1)
 	res = k*d + math.log(A_div_k, 2) + logN + gamma/math.log(2)
 
-""" Still need to implement these"""
-def func_Gamma(v):
 
-	return -1
+"""
+Euclidian Gamma function (i think...)
+"""
+def func_Gamma(v):
+	raise NotImplementedError
 
 
 """
@@ -92,6 +109,8 @@ Returns:
 	(array of numpy matrices, sample variance of natural images used)
 """
 def crop_natural_images(nat_image_dir, R):
+
+	raise NotImplementedError
 
 	try:
 		for filename in os.listdir(nat_image_dir):

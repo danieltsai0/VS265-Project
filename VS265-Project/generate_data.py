@@ -17,11 +17,10 @@ Arguments:
 	dataset_fn - natural image dataset
 	fn - filename to save serialized data to, prepended with type of data generated
 	R - generates R-by-R images
-	n - generate n-by-n patches from the images
 	num - number of data patches to generate (for noise)
 """
 
-def generate_data(dataset_fn, fn, R, n, num):
+def generate_data(dataset_fn, fn, R, num):
 	# variance of gaussian and pink noise resp.
 	varG, varP = None, None
 	data_ary = []
@@ -44,6 +43,8 @@ Generate patches for a given dataset. Assumes that each image is a 1024x1024 num
 
 Arguments: 
 	dataset_fn 
+	R
+	n
 
 Returns:
 	tuple of patches for T and N respectively
