@@ -18,16 +18,26 @@ Arguments:
 	fn - filename to save serialized data to, prepended with type of data generated
 	R - generates R-by-R images
 	n - generate n-by-n patches from the images
+	num - number of data patches to generate (for noise)
 """
 
-def generate_data(dataset_fn, fn, R, n):
-
+def generate_data(dataset_fn, fn, R, n, num):
+	# variance of gaussian and pink noise resp.
+	varG, varP = None, None
+	data_ary = []
 	# generate gaussian
+	data_ary.append(util.generate_gaussian(varG, R, num))
 	# generate 1/f
+	data_ary.append(util.generate_pink(varP, 1, R, num))
 	# generate 1/f^2
+	data_ary.append(util.generate_pink(varP, 2, R, num))
 	# generate spectrum-equalized
+	data_ary.append(util.generate_equalized(R, num))
 	# generate natural images
-	return
+	data_ary.append(util.crop_natural_images(dataset_fn, R))
+	
+	for tod, data in zip(util.types_of_data, data_ary):
+		pickle.dump(data, tod+util.pickle_suffix)
 
 """
 Generate patches for a given dataset. Assumes that each image is a 1024x1024 numpy matrix.

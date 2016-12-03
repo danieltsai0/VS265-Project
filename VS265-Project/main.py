@@ -8,27 +8,26 @@ import matplotlib.pyplot as plt
 
 
 """
-Main method that either loads or creates a new model that is to be 
-trained. 
+Estimates entropy and relative dimension of a given dataset. 
 
 Arguments: 
 	tod: type of data being measured 
 	n_neighbors: number of neighbors to compare each patch to
 """
-def main(*args):
+def estimate(*args):
 
 	if len(args) != 3:
 		print("Error in input")
 		sys.exit(-1)
 
-	_, tod, n_neighbors = args
+	_, _, tod, n_neighbors = args
 
 	if dataset_fn == "" or n_neighbors == -1: 
 		print("Error in input")
 		sys.exit(-1)
 
 	# Load patches from dataset
-	Tp, Np = load (from_data_patches)
+	Tp, Np = util.load_patches(tod, n_neighbors)
 	# Generate distances for each target patch
 	D = [util.find_nearest_neighbor(patch, Np) for patch in Tp]
 

@@ -6,7 +6,9 @@ import numpy as np
 ##########
 
 
-types = ["Gaussian", "1/f", "1/f^2", "spectrum-equalized", "natural"]
+types_of_data = ["gaussian", "1/f", "1/f2", "equalized", "natural"]
+data_pickle_suffix = "_data.pickle"
+patches_pickle_suffix = "_patches.pickle"
 natural_image_dir = "..\\Data\\vanhateren_imc"
 gamma = 0.577215665
 
@@ -18,7 +20,7 @@ gamma = 0.577215665
 """
 Loads a numpy dataset and return it.
 """
-def load_dataset(filename):
+def load_dataset(tod, n_neighbors):
 	return np.load(filename)
 
 def find_nearest_neighbor(patch, Np):
@@ -28,19 +30,68 @@ def entropy_est(k, d, logN):
 	A_div_k = k * math.pi**(k/2) / func_Gamma(k/2 + 1)
 	res = k*d + math.log(A_div_k, 2) + logN + gamma/math.log(2)
 
+""" Still need to implement these"""
 def func_Gamma(v):
+
 	return -1
 
-def generate_gaussian(var):
-	return
 
-def generate_pink(var, f_pow):
-	return
+"""
+Generates 8bit square Gaussian distributed noise
 
-def generate_equalized():
-	return
+Arguments: 
+	var - variance of gaussian distribution
+	R - size of image (RxR)
+	num - number of images to generate
 
-def crop_natural_images(nat_image_dir):
+Returns: 
+	array of numpy matrices
+"""
+def generate_gaussian(var, R, num=1):
+	raise NotImplementedError
+
+
+"""
+Generates 8bit square pink noise
+
+Arguments: 
+	var - variance of gaussian distribution
+	f_pow - standard deviation ~ 1/f**f_pow
+	R - size of image (RxR)
+	num - number of images to generate
+
+Returns: 
+	array of numpy matrices
+"""
+def generate_pink(var, f_pow, R, num=1):
+	raise NotImplementedError
+
+
+"""
+Generates 8bit square spectrum-equalized noise
+
+Arguments: 
+	R - size of image (RxR)
+	num - number of images to generate
+
+Returns: 
+	array of numpy matrices
+"""
+def generate_equalized(R, num=1):
+	raise NotImplementedError
+
+"""
+Crops natural images to RxR from image numbers listed 
+in filenums.txt. 
+
+Arguments: 
+	nat_image_dir - directory containing natural images
+	R - size (RxR) to crop to
+
+Returns: 
+	(array of numpy matrices, sample variance of natural images used)
+"""
+def crop_natural_images(nat_image_dir, R):
 
 	try:
 		for filename in os.listdir(nat_image_dir):
