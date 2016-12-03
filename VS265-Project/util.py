@@ -12,6 +12,7 @@ data_pickle_suffix = "_data.pickle"
 patches_pickle_suffix = "_patches.pickle"
 natural_image_dir = "..\\Data\\vanhateren_imc"
 gamma = 0.577215665
+num = 150
 
 
 ###########

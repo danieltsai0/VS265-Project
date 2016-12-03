@@ -14,26 +14,24 @@ Types of data:
 	Gaussian, 1/f, 1/f^2, spectrum-equalized noise, natural scenes
 
 Arguments: 
-	dataset_fn - natural image dataset
-	fn - filename to save serialized data to, prepended with type of data generated
 	R - generates R-by-R images
-	num - number of data patches to generate (for noise)
 """
 
-def generate_data(dataset_fn, fn, R, num):
-	# variance of gaussian and pink noise resp.
-	varG, varP = None, None
-	data_ary = []
+def generate_data(*args):
+	
+	varG, varP, data_ary = None, None, []
+	_, _, R = args
+
 	# generate gaussian
-	data_ary.append(util.generate_gaussian(varG, R, num))
+	data_ary.append(util.generate_gaussian(varG, R, util.num))
 	# generate 1/f
-	data_ary.append(util.generate_pink(varP, 1, R, num))
+	data_ary.append(util.generate_pink(varP, 1, R, util.num))
 	# generate 1/f^2
-	data_ary.append(util.generate_pink(varP, 2, R, num))
+	data_ary.append(util.generate_pink(varP, 2, R, util.num))
 	# generate spectrum-equalized
-	data_ary.append(util.generate_equalized(R, num))
+	data_ary.append(util.generate_equalized(R, util.num))
 	# generate natural images
-	data_ary.append(util.crop_natural_images(dataset_fn, R))
+	data_ary.append(util.crop_natural_images(natural_image_dir, R))
 	
 	for tod, data in zip(util.types_of_data, data_ary):
 		pickle.dump(data, tod+util.pickle_suffix)
