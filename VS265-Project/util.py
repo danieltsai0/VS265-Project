@@ -1,7 +1,6 @@
 import array, sys, os, math
 import numpy as np
 
-
 ##########
 # Macros #
 ##########
@@ -61,6 +60,3 @@ def crop_natural_images(nat_image_dir):
 
 	except:
 		print("Unexpected error encounteredc", sys.exc_info()[0])
-
-
-	
