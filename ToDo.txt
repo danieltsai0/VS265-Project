@@ -1,8 +1,4 @@
 Things to do:
 
-- implement gaussian, pink, spectrum equalizing noise
 - figure out how to convert natural images (16bit) to 8bit
-- implement relative dim 
-- implement Gamma function (there may be a builtin)
-
-- extra stuff (need ideas)
+- implement function that runs ICA/PCA and projects / reconstructs

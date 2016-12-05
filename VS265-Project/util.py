@@ -7,12 +7,13 @@ import numpy as np
 
 
 types_of_data = ["gaussian", "1/f", "1/f2", "equalized", "natural"]
-n_neighbors = []
+size_of_patches = 3
 data_pickle_suffix = "_data.pickle"
 patches_pickle_suffix = "_patches.pickle"
 natural_image_dir = "..\\Data\\vanhateren_imc"
 gamma = 0.577215665
 num = 150
+max_nnpow = 18
 
 
 ###########
@@ -22,10 +23,10 @@ num = 150
 """
 Loads a numpy dataset and return it.
 """
-def load_dataset(tod, n_neighbors):
+def load_dataset(tod):
 	return np.load(filename)
 
-def load_patches(tod):
+def load_patches(tod, nnpow):
 	raise NotImplementedError 
 
 def find_nearest_neighbor(patch, Np):
@@ -45,13 +46,6 @@ Returns:
 def entropy_est(k, d):
 	A_div_k = k * math.pi**(k/2) / func_Gamma(k/2 + 1)
 	res = k*d + math.log(A_div_k, 2) + logN + gamma/math.log(2)
-
-
-"""
-Euclidian Gamma function (i think...)
-"""
-def func_Gamma(v):
-	raise NotImplementedError
 
 
 """
@@ -131,3 +125,9 @@ def crop_natural_images(nat_image_dir, R):
 
 	except:
 		print("Unexpected error encounteredc", sys.exc_info()[0])
+
+
+def reconstruction(components, dataset):
+	raise NotImplementedError
+
+def 
