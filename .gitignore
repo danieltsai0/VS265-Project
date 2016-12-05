@@ -2,3 +2,7 @@
 ########
 *.iml
 Data/
+
+# Extra files #
+###############
+*test*
