@@ -1,7 +1,6 @@
-import array, sys, os, math
+import array, sys, os, math, config
 import numpy as np
 
-from config import *
 
 
 ###########
@@ -40,7 +39,7 @@ Returns:
 """	
 def entropy_est(k, d):
 	A_div_k = k * math.pi**(k/2) / func_Gamma(k/2 + 1)
-	res = k*d + math.log(A_div_k, 2) + logN + gamma/math.log(2)
+	res = k*d + math.log(A_div_k, 2) + logN + config.gamma/math.log(2)
 
 
 """
@@ -94,22 +93,30 @@ in filenums.txt.
 Arguments: 
 	nat_image_dir - directory containing natural images
 	R - size (RxR) to crop to
+	tod - merely for storing purposes
 
 Returns: 
 	(array of numpy matrices, sample variance of natural images used)
 """
-def crop_natural_images(nat_image_dir, R):
-
-	raise NotImplementedError
+def crop_natural_images(nat_image_dir, R, tod):
 
 	try:
-		for filename in os.listdir(nat_image_dir):
+		# List to contain cropped images
+		imgs = []
+		for filename in os.listdir(config.natural_image_dir):
+			# Load image file
 			fin = open( filename, 'rb' )
 			s = fin.read()
 			fin.close()
+			# Create uint16 array for data
 			arr = array.array('H', s)
 			arr.byteswap()
-			img = numpy.array(arr, dtype='uint16').reshape(1024,1536)
+			# Convert to uint8 data and crop
+			img = np.array(arr, dtype='uint16').reshape(1024,1536)
+			img = np.round(img / 257)[:,256:1280]
+			imgs.append(img)
+
+		return np.array(imgs)
 
 	except FileNotFoundError as e:
 		print ("Directory not found error({0}): {1}".format(e.errno, e.strerror))
@@ -125,4 +132,3 @@ def crop_natural_images(nat_image_dir, R):
 def reconstruction(components, dataset):
 	raise NotImplementedError
 
-def 

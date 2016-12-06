@@ -1,8 +1,7 @@
-import pickle, signal, sys, util
+import pickle, signal, sys, util, config
 import numpy as np
 import matplotlib.pyplot as plt
 
-from util import *
 
 """
 Estimates entropy and relative dimension of a given dataset. 

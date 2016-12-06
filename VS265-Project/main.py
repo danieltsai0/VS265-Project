@@ -1,11 +1,6 @@
-import pickle, signal, sys, util
+import pickle, signal, sys, util, generate_data, estimate
 import numpy as np
 import matplotlib.pyplot as plt
-
-from util import *
-from generate_data import *
-from estimate import *
-
 
 
 if __name__ == "__main__":

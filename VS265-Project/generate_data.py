@@ -1,9 +1,7 @@
-import pickle, util, sys
+import pickle, util, sys, config
 import numpy as np
 import matplotlib.pyplot as plt
 
-from util import *
-from config import *
 
 """
 Generate 5 types of data. 
