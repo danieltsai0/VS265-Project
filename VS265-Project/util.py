@@ -2,7 +2,6 @@ import array, sys, os, math, config
 import numpy as np
 
 
-
 ###########
 # Methods #
 ###########
@@ -96,7 +95,7 @@ Arguments:
 	tod - merely for storing purposes
 
 Returns: 
-	(array of numpy matrices, sample variance of natural images used)
+	(numpy array of numpy matrices, sample variance of natural images used)
 """
 def crop_natural_images(nat_image_dir, R, tod):
 

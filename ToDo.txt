@@ -1,4 +1,5 @@
 Things to do:
 
-- figure out how to convert natural images (16bit) to 8bit
 - implement function that runs ICA/PCA and projects / reconstructs
+- run on natural images, ICA, PCA projected data
+- create graphs and data for presentation

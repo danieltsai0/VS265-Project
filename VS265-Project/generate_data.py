@@ -40,7 +40,7 @@ def generate_data(*args):
 			sys.exit(-1)
 		
 		else:
-			print("This type of data is undefined.")
+			print("This type of data: {0} is undefined.".format(tod))
 			sys.exit(-1)
 		
 		pickle.dump(data, config.gen_data_dir
@@ -65,7 +65,6 @@ Returns:
 	tuple of patches for T and N respectively
 """
 def generate_patches(R, tod):
-
 
 	# Compute the minimum number of neighbor images 
 	Rus = R - (R % util.size_of_patches) 
