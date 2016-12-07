@@ -41,9 +41,9 @@ def generate_data(*args):
 		elif tod == "pca":
 			# generate reconstructions using pca
 			# want to make sure to check that the natural image cropped data already exists (nat_data.pickle)
-			with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
-                            images = pickle.load(f)
-                        data = util.pca_reconst(images, R, n=64)
+                    with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
+                        images = pickle.load(f)
+                    data = util.pca_reconst(images, R, n=64)
                         
 		else:
 			print("This type of data: {0} is undefined.".format(tod))
