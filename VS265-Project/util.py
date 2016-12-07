@@ -1,6 +1,7 @@
 import array, sys, os, math, config, pickle
 import numpy as np
 
+from sklearn.decomposition import FastICA, PCA
 
 ###########
 # Methods #
@@ -136,3 +137,52 @@ def crop_natural_images(nat_image_dir, R):
 def reconstruction(components, dataset):
 	raise NotImplementedError
 
+"""
+takes array of cropped natural images (RxR);
+returns array of ICA reconstruction for each image
+based on n components
+
+if n is unspecified, all are used
+
+"""
+def ica_reconst(images, R, n=None):
+    #reshape image data into vectors
+    num_ims, im_size = images.shape[0], images[0].size
+    im_vecs = (images.reshape(num_ims, im_size)).T #shape(im_size,num_ims)
+
+    #train ica
+    ica = FastICA(n_components=n)
+    basis = ica.fit_transform(im_vecs) #shape(im_size, n)
+
+
+    #project and reconstruct
+    #im_weights = im_vecs @ basis #(num_ims, n)
+    im_weights = ica.mixing_ #(num_ims, n)
+    reconst = im_weights @ basis.T #(num_ims, im_size)
+
+    return reconst.reshape(images.shape)
+
+
+"""
+takes array of cropped natural images (RxR);
+returns array of PCA reconstruction for each image
+based on n components
+
+if n is unspecified, all are used
+
+"""
+def pca_reconst(images, R, n=None):
+    #reshape image data into vectors
+    num_ims, im_size = images.shape[0], images[0].size
+    im_vecs = (images.reshape(num_ims, im_size)).T
+
+    #train ica
+    pca = PCA(n_components=n)
+    basis = pca.fit_transform(im_vecs)
+    
+    #project and reconstruct
+    #im_weights = pca.mixing_ #(num_ims, n)
+    im_weights = im_vecs.T @ basis #(num_ims, n)
+    reconst = im_weights @ basis.T #(num_ims, im_size)
+
+    return reconst.reshape(images.shape)

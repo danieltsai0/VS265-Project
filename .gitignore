@@ -2,6 +2,7 @@
 ########
 *.iml
 *.imc
+*.pickle
 Data/
 
 # Extra files #
