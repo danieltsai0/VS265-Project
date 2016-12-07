@@ -1,6 +1,7 @@
 # Data #
 ########
 *.iml
+*.imc
 Data/
 
 # Extra files #

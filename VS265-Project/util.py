@@ -1,4 +1,4 @@
-import array, sys, os, math, config
+import array, sys, os, math, config, pickle
 import numpy as np
 
 
@@ -92,19 +92,24 @@ in filenums.txt.
 Arguments: 
 	nat_image_dir - directory containing natural images
 	R - size (RxR) to crop to
-	tod - merely for storing purposes
 
 Returns: 
 	(numpy array of numpy matrices, sample variance of natural images used)
 """
-def crop_natural_images(nat_image_dir, R, tod):
+def crop_natural_images(nat_image_dir, R):
 
 	try:
 		# List to contain cropped images
 		imgs = []
-		for filename in os.listdir(config.natural_image_dir):
+		filenums = pickle.load(open(config.filenums_fn, "rb"))
+		for filename in os.listdir(nat_image_dir):
+
+			filenum = filename.replace("k", " ").replace(".", " ").split()[1]
+			
+			if filenum not in filenums:
+				continue
 			# Load image file
-			fin = open( filename, 'rb' )
+			fin = open(nat_image_dir+filename, 'rb' )
 			s = fin.read()
 			fin.close()
 			# Create uint16 array for data
@@ -125,7 +130,7 @@ def crop_natural_images(nat_image_dir, R, tod):
 		print ("I/O error({0}): {1}".format(e.errno, e.strerror))
 
 	except:
-		print("Unexpected error encounteredc", sys.exc_info()[0])
+		print("Unexpected error encountered", sys.exc_info()[0])
 
 
 def reconstruction(components, dataset):

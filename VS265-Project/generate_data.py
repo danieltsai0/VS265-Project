@@ -15,6 +15,9 @@ Types of data:
 Arguments: 
 	R - generates R-by-R images
 	tod - type of data to generate (nat, ica, pca)
+
+Sample call:
+	python main.py generate R nat
 """
 
 def generate_data(*args):
@@ -22,10 +25,11 @@ def generate_data(*args):
 	try:
 		varG, varP, data_ary = None, None, []
 		_, _, R, tod = args
+		R = int(R)
 
 		if tod == "nat":
 			# generate natural images
-			data = util.crop_natural_images(natural_image_dir, R)
+			data = util.crop_natural_images(config.natural_image_dir, R)
 
 		elif tod == "ica":
 			# generate reconstructions using ica
@@ -43,14 +47,14 @@ def generate_data(*args):
 			print("This type of data: {0} is undefined.".format(tod))
 			sys.exit(-1)
 		
-		pickle.dump(data, config.gen_data_dir
+		pickle.dump(data, open(config.gen_data_dir
 						  + tod
-						  + config.data_pickle_suffix)
+						  + config.data_pickle_suffix, "wb"))
 
-		generate_patches(R, tod)
+		#generate_patches(R, tod)
 
 	except ValueError:
-		print("incorrect command line argument formatting", args)
+		print("incorrect command line argument formatting {0}".format(args))
 		sys.exit(-1)
 
 
@@ -67,24 +71,26 @@ Returns:
 def generate_patches(R, tod):
 
 	# Compute the minimum number of neighbor images 
-	Rus = R - (R % util.size_of_patches) 
-	nppi = Rus**2 / util.size_of_patches**2
-	mnni = int(np.ceil(np.power(2,util.max_nnpow)))
+	Rus = R - (R % config.size_of_patches) 
+	nppi = Rus**2 / config.size_of_patches**2
+	mnni = int(np.ceil(np.power(2,config.max_nnpow)))
+
+	data = util.load_dataset(tod)
 
 	if mnni > len(data):
 		print("not enough images in dataset {0} to generate patches for 2**18 neighbors".format(dataset_fn))
 		sys.exit(-1)
 
 	# Permute dataset and save patches as dictionary
-	data = util.load_dataset(tod)
+	
 	randomized = np.random.permutation(data)
 	Ni, Ti = randomized[:mnni], randomized[mnni:]
 	patch_dict = {"Tp":get_patches(Ti, R), "Np":np.random.permuatation(get_patches(Ni, R))}
 
 	# Save patches generated
-	pickle.dump(patch_dict, config.gen_data_dir
+	pickle.dump(patch_dict, open(config.gen_data_dir
 							+ tod
-							+ config.patches_pickle_suffix)
+							+ config.patches_pickle_suffix, "wb"))
 
 
 """
@@ -97,7 +103,7 @@ Arguments:
 Returns: 
 	array of n-by-n numpy matrices
 """
-def get_patches(imageset, R, n=util.size_of_patches):
+def get_patches(imageset, R, n=config.size_of_patches):
 	
 	ret, r = [], np.delete(np.arange(0, R, n), -1, 0)
 
