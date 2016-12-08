@@ -53,7 +53,7 @@ Returns:
 """	
 def entropy_est(k, d, N):
 	A_div_k = math.pi**(k/2) / math.gamma(k/2 + 1)
-	res = k*d + math.log(A_div_k, 2) + math.log(A_div_k * N, 2) + config.gamma/math.log(2)
+	res = k*d + math.log(A_div_k * N, 2) + config.gamma/math.log(2)
 	return res
 
 
