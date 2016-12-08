@@ -38,14 +38,14 @@ def generate_data(*args):
 			# want to make sure to check that the natural image cropped data already exists (nat_data.pickle)
                         with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
                             images = pickle.load(f)
-                        data = util.ica_reconst(images, R, n=64)
+                        data = util.ica_reconst(images, R, n=128)
 
 		elif tod == "pca":
 			# generate reconstructions using pca
 			# want to make sure to check that the natural image cropped data already exists (nat_data.pickle)
                     with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
                         images = pickle.load(f)
-                    data = util.pca_reconst(images, R, n=64)
+                    data = util.pca_reconst(images, R, n=128)
 
 		elif tod == "gwn":
 			# 3x3 patches: 127.5, 32, 513, 13
