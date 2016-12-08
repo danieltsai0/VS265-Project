@@ -13,8 +13,8 @@ Arguments:
 	tod: type(s) of data being measured 
 
 Example calls:
-	python main.py estimate 17 100 nat ica
-	python main.py estimate 17 100 nat ica pca
+	python main.py estimate 17 100 t nat ica
+	python main.py estimate 17 100 f nat ica pca
 
 	Note that the order of the tod doesn't matter
 """
@@ -22,8 +22,8 @@ vlog = np.vectorize(util.log)
 def estimate(*args):
 
 	# try:
-		_, _, n_neighbors_pow, *tod = args
-		estimates, nnp, Tnum, is_ent = [], int(n_neighbors_pow)
+		_, _, n_neighbors_pow, Tnum, is_ent, *tod = args
+		estimates, nnp, Tnum = [], int(n_neighbors_pow), int(Tnum)
 
 		for d in tod:
 
@@ -60,23 +60,33 @@ def estimate(*args):
 				ys.append(y)
 				estimates.append([x, y])
 				i+=1
+
 			fig, ax = plt.subplots()
 			ax.set_xscale('log', basex=2)
 			ax.plot(xs, ys)
-			plt.show()
-
+			plt.xlabel("Number of samples")
 			if is_ent == "t":
-				plt.savefig(d + "_entropy_plot.png")
+				plt.ylabel("Entropy (bits/pixel)")
+				plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + "_entropy_plot.png")
 				pickle.dump(estimates, open(config.gen_data_dir 
-						   + n_neighbors_pow
-						   + d
+						   + d 
+						   + "_"
+						   + str(nnp)
+						   + "_"
+						   + str(Tnum)
 						   + config.entropy_pickle_suffix, "wb"))
 			elif is_ent == "f":
-				plt.savefig(d + "_avg_nn_plot.png")
+				plt.ylabel("Average Log Nearest-Neighbor Distance")
+				plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + "_avg_nn_plot.png")
 				pickle.dump(estimates, open(config.gen_data_dir 
-						   + n_neighbors_pow 
 						   + d 
-						   + config.entropy_pickle_suffix, "wb"))
+						   + "_"
+						   + str(nnp) 
+						   + "_"
+						   + str(Tnum)
+						   + config.avgnn_pickle_suffix, "wb"))
+
+			plt.show()
 			plt.close()
 			
 	

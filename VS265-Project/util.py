@@ -36,7 +36,7 @@ def find_nearest_neighbor(patch, Np):
 	return np.min([np.linalg.norm(patch - npatch) for npatch in Np])
 
 def log(x):
-	if x <= 1:
+	if x == 0:
 		return 0
 	else:
 		return math.log(x, 2)
