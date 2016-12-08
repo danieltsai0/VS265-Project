@@ -8,6 +8,14 @@ from sklearn.decomposition import FastICA, PCA
 ###########
 
 """
+Provides view of 2D numpy matrix in greyscale
+"""
+def view(mat):
+	plt.matshow(mat, cmap=plt.cm.gray)
+	plt.show()
+	return
+
+"""
 Loads a numpy dataset and return it.
 """
 def load_dataset(tod):
@@ -53,8 +61,16 @@ Arguments:
 Returns: 
 	array of numpy matrices
 """
-def generate_gaussian(var, R, num=1):
-	raise NotImplementedError
+def generate_gaussian(mean, var, R, num):
+	noise_ims = []
+	for i in range(num):
+		noise_im = np.zeros((R,R))
+		for j in range(R):
+			for k in range(R):
+				smpl = np.random.normal(mean, math.sqrt(var))
+				noise_im[j][k] = math.floor(smpl + 0.5) #discretize
+		noise_ims.append(noise_im)
+	return noise_ims
 
 
 """

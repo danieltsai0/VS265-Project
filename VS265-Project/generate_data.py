@@ -44,6 +44,12 @@ def generate_data(*args):
                     with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
                         images = pickle.load(f)
                     data = util.pca_reconst(images, R, n=64)
+
+        elif tod == "gwn":
+			# 3x3 patches: 127.5, 32, 513, 13
+			# 8x8 patches: 127.5, 36, 513, 19 
+			data = util.generate_gaussian(127.5, 32, R, 13) 
+
                         
 		else:
 			print("This type of data: {0} is undefined.".format(tod))
