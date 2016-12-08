@@ -209,6 +209,7 @@ def pca_reconst(images, R, n=None):
     #im_weights = pca.mixing_ #(num_ims, n)
     im_weights = im_vecs.T @ basis #(num_ims, n)
     reconst = im_weights @ basis.T #(num_ims, im_size)
-    reconst = np.floor( reconst/reconst.size + abs(reconst.min()) ) #normalize
+    reconst = reconst/reconst.size #normalize
+    reconst = np.floor( reconst + abs(reconst.min()) )#rescale
 
     return reconst.reshape(images.shape)
