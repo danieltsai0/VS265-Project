@@ -20,6 +20,7 @@ Sample call:
 	python main.py generate R nat
 """
 
+
 def generate_data(*args):
 
 	try:
@@ -29,6 +30,7 @@ def generate_data(*args):
 
 		if tod == "nat":
 			# generate natural images
+			
 			data = util.crop_natural_images(config.natural_image_dir, R)
 
 		elif tod == "ica":
@@ -59,7 +61,8 @@ def generate_data(*args):
 						  + tod
 						  + config.data_pickle_suffix, "wb"))
 
-		#generate_patches(R, tod)
+
+		generate_patches(R, tod)
 
 	except ValueError:
 		print("incorrect command line argument formatting {0}".format(args))
@@ -81,7 +84,7 @@ def generate_patches(R, tod):
 	# Compute the minimum number of neighbor images 
 	Rus = R - (R % config.size_of_patches) 
 	nppi = Rus**2 / config.size_of_patches**2
-	mnni = int(np.ceil(np.power(2,config.max_nnpow)))
+	mnni = int(np.ceil(np.power(2,config.max_nnpow)/nppi))
 
 	data = util.load_dataset(tod)
 
@@ -93,7 +96,7 @@ def generate_patches(R, tod):
 	
 	randomized = np.random.permutation(data)
 	Ni, Ti = randomized[:mnni], randomized[mnni:]
-	patch_dict = {"Tp":get_patches(Ti, R), "Np":np.random.permuatation(get_patches(Ni, R))}
+	patch_dict = {"Tp":get_patches(Ti, R), "Np":np.random.permutation(get_patches(Ni, R))}
 
 	# Save patches generated
 	pickle.dump(patch_dict, open(config.gen_data_dir

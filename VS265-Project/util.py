@@ -1,5 +1,6 @@
 import array, sys, os, math, config, pickle
 import numpy as np
+import matplotlib.pyplot as plt
 
 from sklearn.decomposition import FastICA, PCA
 
@@ -34,6 +35,11 @@ def load_patches(tod, nnpow):
 def find_nearest_neighbor(patch, Np):
 	return np.min([np.linalg.norm(patch - npatch) for npatch in Np])
 
+def log(x):
+	if x <= 1:
+		return 0
+	else:
+		return math.log(x, 2)
 
 """
 Estimates the entropy of a given set of distances.
@@ -45,9 +51,10 @@ Arguments:
 Returns: 
 	array of estimated entropy of target patches for each N
 """	
-def entropy_est(k, d):
-	A_div_k = k * math.pi**(k/2) / func_Gamma(k/2 + 1)
-	res = k*d + math.log(A_div_k, 2) + logN + config.gamma/math.log(2)
+def entropy_est(k, d, N):
+	A_div_k = math.pi**(k/2) / math.gamma(k/2 + 1)
+	res = k*d + math.log(A_div_k, 2) + math.log(A_div_k * N, 2) + config.gamma/math.log(2)
+	return res
 
 
 """
@@ -114,10 +121,11 @@ Returns:
 	(numpy array of numpy matrices, sample variance of natural images used)
 """
 def crop_natural_images(nat_image_dir, R):
-
+	
 	try:
 		# List to contain cropped images
 		imgs = []
+
 		filenums = pickle.load(open(config.filenums_fn, "rb"))
 		for filename in os.listdir(nat_image_dir):
 

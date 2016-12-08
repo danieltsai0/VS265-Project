@@ -5,9 +5,10 @@ patches_pickle_suffix = "_patches.pickle"
 entropy_pickle_suffix = "_entropy.pickle"
 natural_image_dir = "../Data/vanhateren_iml/"
 filenums_fn = "filenums.pickle"
+avgnn_pickle_suffix = "_avgnn.pickle"
 
 # Parameters for execution
 size_of_patches = 3
 gamma = 0.577215665
 max_nnpow = 18
-types_of_data = ["nat", "ica", "pca"]
+types_of_data = ["nat", "ica", "pca", "gwn"]
