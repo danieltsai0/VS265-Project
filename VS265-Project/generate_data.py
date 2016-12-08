@@ -45,7 +45,7 @@ def generate_data(*args):
                         images = pickle.load(f)
                     data = util.pca_reconst(images, R, n=64)
 
-        elif tod == "gwn":
+		elif tod == "gwn":
 			# 3x3 patches: 127.5, 32, 513, 13
 			# 8x8 patches: 127.5, 36, 513, 19 
 			data = util.generate_gaussian(127.5, 32, R, 13) 
