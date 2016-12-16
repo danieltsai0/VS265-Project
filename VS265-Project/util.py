@@ -1,6 +1,7 @@
 import array, sys, os, math, config, pickle
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
 
 from sklearn.decomposition import FastICA, PCA
 
@@ -180,6 +181,7 @@ def ica_reconst(images, R, n=None):
     #train ica
     ica = FastICA(n_components=n)
     basis = ica.fit_transform(im_vecs) #shape(im_size, n)
+    pickle.dump(basis, open('data/ica_basis'+str(n), 'wb'))
 
 
     #project and reconstruct
@@ -212,6 +214,7 @@ def pca_reconst(images, R, n=None):
     #train ica
     pca = PCA(n_components=n)
     basis = pca.fit_transform(im_vecs)
+    pickle.dump(basis, open('data/pca_basis'+str(n), 'wb'))
     
     #project and reconstruct
     #im_weights = pca.mixing_ #(num_ims, n)
