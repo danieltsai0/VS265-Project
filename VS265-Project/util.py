@@ -141,8 +141,9 @@ def crop_natural_images(nat_image_dir, R):
 			arr = array.array('H', s)
 			arr.byteswap()
 			# Convert to uint8 data and crop
-			img = np.array(arr, dtype='uint16').reshape(1024,1536)
-			img = np.round(img / 257)[:,256:1280]
+			img = np.array(arr, dtype='uint16').reshape(1024,1536)[:,256:1280]
+			img = (img / 257)
+
 			imgs.append(img)
 
 		return np.array(imgs)

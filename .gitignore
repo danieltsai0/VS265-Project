@@ -4,9 +4,9 @@
 *.imc
 *_data.pickle
 *_patches.pickle
-*.pyc
 Data/
 
 # Extra files #
 ###############
 *test*
+
