@@ -18,6 +18,11 @@ Arguments:
 
 Sample call:
 	python main.py generate R nat
+	python main.py generate R ica 128
+	python main.py generate R pca 64
+
+If main.py generate R is run with ica or pca, but no basis number is set,
+then the basis number is set by default to 128.
 """
 
 
@@ -25,8 +30,13 @@ def generate_data(*args):
 
 	try:
 		varG, varP, data_ary = None, None, []
-		_, _, R, tod = args
-		R = int(R)
+		# _, _, R, tod = args
+		R = int(args[2])
+		tod = args[3]
+		if len(args) >= 5:
+			basis = args[4]
+		else:
+			basis = ""
 
 		if tod == "nat":
 			# generate natural images
@@ -38,14 +48,18 @@ def generate_data(*args):
 			# want to make sure to check that the natural image cropped data already exists (nat_data.pickle)
 			with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
 				images = pickle.load(f)
-			data = util.ica_reconst(images, R, n=128)
+			if basis == "":
+				basis = "128"
+			data = util.ica_reconst(images, R, n=int(basis))
 
 		elif tod == "pca":
 			# generate reconstructions using pca
 			# want to make sure to check that the natural image cropped data already exists (nat_data.pickle)
 			with open( config.gen_data_dir+'nat_data.pickle', "rb" ) as f:
 				images = pickle.load(f)
-			data = util.pca_reconst(images, R, n=128)
+			if basis == "":
+				basis = "128"
+			data = util.pca_reconst(images, R, n=int(basis))
 
 		elif tod == "gwn":
 			# 3x3 patches: 127.5, 32, 513, 13
@@ -57,12 +71,11 @@ def generate_data(*args):
 			print("This type of data: {0} is undefined.".format(tod))
 			sys.exit(-1)
 		
-		pickle.dump(data, open(config.gen_data_dir
-						  + tod
-						  + config.data_pickle_suffix, "wb"))
+		name = config.gen_data_dir + tod + basis + config.data_pickle_suffix
+	
+		pickle.dump(data, open(name, "wb"))
 
-
-		generate_patches(R, tod)
+		generate_patches(R, tod, basis)
 
 	except ValueError:
 		print("incorrect command line argument formatting {0}".format(args))
@@ -79,7 +92,7 @@ Arguments:
 Returns:
 	tuple of patches for T and N respectively
 """
-def generate_patches(R, tod):
+def generate_patches(R, tod, basis):
 
 	# Compute the minimum number of neighbor images 
 	Rus = R - (R % config.size_of_patches) 
@@ -101,6 +114,7 @@ def generate_patches(R, tod):
 	# Save patches generated
 	pickle.dump(patch_dict, open(config.gen_data_dir
 							+ tod
+							+ basis
 							+ config.patches_pickle_suffix, "wb"))
 
 

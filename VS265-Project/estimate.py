@@ -73,14 +73,19 @@ def estimate(*args):
 				ylbl = "Entropy (bits/pixel)"
 				pltstr = "_entropy_plot.png"
 				suffix = config.entropy_pickle_suffix
+				title = "Entropy vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
 
 			elif is_ent == "f":
-				ylbl = "Average Log Nearest-Neighbor Distance"
+				ylbl = "Average Log NN Distance"
 				pltstr = "_avg_nn_plot.png"
 				suffix = config.avgnn_pickle_suffix
+				title = ylbl + " vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
 
 			plt.ylabel(ylbl)
+			plt.title(title)
+			#save .png of this graph
 			plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + pltstr)
+			#pickle (x,y) data of this graph
 			pickle.dump(estimates, open(config.gen_data_dir 
 					   + d 
 					   + "_"
