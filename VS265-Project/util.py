@@ -25,12 +25,12 @@ def load_dataset(tod):
 
 	return data
 
-def load_patches(tod, nnpow):
+def load_patches(tod):
 	with open(config.gen_data_dir+tod+config.patches_pickle_suffix, "rb") as patchset:
 		patches = pickle.load(patchset)
 		Tp, Np = patches["Tp"], patches["Np"]
 
-	return Tp, Np[:np.power(2, nnpow)]
+	return Tp, Np
 
 def find_nearest_neighbor(patch, Np):
 	return np.min([np.linalg.norm(patch - npatch) for npatch in Np])
@@ -142,7 +142,9 @@ def crop_natural_images(nat_image_dir, R):
 			arr.byteswap()
 			# Convert to uint8 data and crop
 			img = np.array(arr, dtype='uint16').reshape(1024,1536)[:,256:1280]
-			img = (img / 257)
+			img = img*(255/np.max(img))
+			#img = img/257
+
 
 			imgs.append(img)
 
@@ -184,7 +186,12 @@ def ica_reconst(images, R, n=None):
     #im_weights = im_vecs @ basis #(num_ims, n)
     im_weights = ica.mixing_ #(num_ims, n)
     reconst = im_weights @ basis.T #(num_ims, im_size)
-    reconst = np.floor( reconst + abs(reconst.min()) )#rescale
+    reconst.reshape(images.shape)
+    for i in range(len(reconst)):
+        im = reconst[i]
+        im += abs(np.min(im))
+        reconst[i] = im*(255/np.max(im))
+    #reconst = np.floor( reconst + abs(reconst.min()) )#rescale
 
     return reconst.reshape(images.shape)
 
@@ -210,7 +217,12 @@ def pca_reconst(images, R, n=None):
     #im_weights = pca.mixing_ #(num_ims, n)
     im_weights = im_vecs.T @ basis #(num_ims, n)
     reconst = im_weights @ basis.T #(num_ims, im_size)
-    reconst = reconst/reconst.size #normalize
-    reconst = np.floor( reconst + abs(reconst.min()) )#rescale
+    
+    # reconst = reconst/reconst.size #normalize
+    # reconst = np.floor( reconst + abs(reconst.min()) )#rescale
+    for i in range(len(reconst)):
+        im = reconst[i]
+        im += abs(np.min(im))
+        reconst[i] = im*(255/np.max(im))
 
     return reconst.reshape(images.shape)

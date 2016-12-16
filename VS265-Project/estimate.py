@@ -32,12 +32,15 @@ def estimate(*args):
 				continue
 
 			# Load patches 
-			Tp, Nps = util.load_patches(d, nnp)
-
+			Tp, Np = util.load_patches(d)
+			totTp = len(Tp)
+			totNp = len(Np)
 			Tp = Tp[np.random.choice(len(Tp), Tnum)]
-		
-			print("T:", len(Tp))
-			print("N:", len(Nps))
+			Np = Np[np.random.choice(len(Np), np.power(2, nnp))]
+			
+			print("T: ", Tnum, "out of", totTp)
+			print("N: ", 2**nnp, "out of", totNp)
+
 			# Generate distances for each target patch
 			i = 0
 			k = len(Tp[0])**2
@@ -46,7 +49,7 @@ def estimate(*args):
 			while i < nnp: 
 				# print(time.time())
 				x = 2**i
-				Npcurr = Nps[np.random.choice(len(Nps), x)]
+				Npcurr = Np[np.random.choice(len(Np), x)]
 				Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
 				Dstar = (1/len(Tp))*np.sum(vlog(Dstars))
 				if is_ent == "t":
@@ -65,26 +68,26 @@ def estimate(*args):
 			ax.set_xscale('log', basex=2)
 			ax.plot(xs, ys)
 			plt.xlabel("Number of samples")
+			
 			if is_ent == "t":
-				plt.ylabel("Entropy (bits/pixel)")
-				plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + "_entropy_plot.png")
-				pickle.dump(estimates, open(config.gen_data_dir 
-						   + d 
-						   + "_"
-						   + str(nnp)
-						   + "_"
-						   + str(Tnum)
-						   + config.entropy_pickle_suffix, "wb"))
+				ylbl = "Entropy (bits/pixel)"
+				pltstr = "_entropy_plot.png"
+				suffix = config.entropy_pickle_suffix
+
 			elif is_ent == "f":
-				plt.ylabel("Average Log Nearest-Neighbor Distance")
-				plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + "_avg_nn_plot.png")
-				pickle.dump(estimates, open(config.gen_data_dir 
-						   + d 
-						   + "_"
-						   + str(nnp) 
-						   + "_"
-						   + str(Tnum)
-						   + config.avgnn_pickle_suffix, "wb"))
+				ylbl = "Average Log Nearest-Neighbor Distance"
+				pltstr = "_avg_nn_plot.png"
+				suffix = config.avgnn_pickle_suffix
+
+			plt.ylabel(ylbl)
+			plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + pltstr)
+			pickle.dump(estimates, open(config.gen_data_dir 
+					   + d 
+					   + "_"
+					   + str(nnp)
+					   + "_"
+					   + str(Tnum)
+					   + suffix, "wb"))
 
 			plt.show()
 			plt.close()
