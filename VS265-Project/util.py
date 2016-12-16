@@ -144,9 +144,6 @@ def crop_natural_images(nat_image_dir, R):
 			# Convert to uint8 data and crop
 			img = np.array(arr, dtype='uint16').reshape(1024,1536)[:,256:1280]
 			img = img*(255/np.max(img))
-			#img = img/257
-
-
 			imgs.append(img)
 
 		return np.array(imgs)

@@ -44,59 +44,68 @@ def estimate(*args):
 			# Generate distances for each target patch
 			i = 0
 			k = len(Tp[0])**2
-			xs, ys = [], []
-			print(Tp[0])
-			while i < nnp: 
-				# print(time.time())
-				x = 2**i
-				Npcurr = Np[np.random.choice(len(Np), x)]
-				Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
-				Dstar = (1/len(Tp))*np.sum(vlog(Dstars))
-				if is_ent == "t":
-					entropy = util.entropy_est(k, Dstar, x)
-					y = entropy/k #need entropy per pixel
-					print(x, y)
-				elif is_ent == "f":
-					y = Dstar
-					print(x, y)
-				xs.append(x)
-				ys.append(y)
-				estimates.append([x, y])
-				i+=1
+			num_neighbor_vec, entropy_vec, avg_log_nn_vec = [], [], []
 
-			fig, ax = plt.subplots()
-			ax.set_xscale('log', basex=2)
-			ax.plot(xs, ys)
-			plt.xlabel("Number of samples")
-			
+			for num_neighbors in np.power(2,np.arange(nnp)):
+				# 
+				Npcurr = Np[np.random.choice(len(Np), num_neighbors)]
+				Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
+
+				avg_log_nn = (1/len(Tp))*np.sum(vlog(Dstars))
+				entropy = util.entropy_est(k, avg_log_nn, num_neighbors) / k if is_ent=="t" else Dstar
+				
+				num_neighbor_vec.append(num_neighbors)
+				entropy_vec.append(entropy)
+				avg_log_nn_vec.append(avg_log_nn)
+
+				print(num_neighbors,entropy)
+
+			# Set vars based on requested graph
 			if is_ent == "t":
 				ylbl = "Entropy (bits/pixel)"
 				pltstr = "_entropy_plot.png"
-				suffix = config.entropy_pickle_suffix
 				title = "Entropy vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
+				ys = entropy_vec
 
 			elif is_ent == "f":
 				ylbl = "Average Log NN Distance"
 				pltstr = "_avg_nn_plot.png"
-				suffix = config.avgnn_pickle_suffix
 				title = ylbl + " vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
+				ys = avg_log_nn_vec
 
+
+			# Plot data
+			fig, ax = plt.subplots()
+			ax.set_xscale('log', basex=2)
+			ax.plot(num_neighbor_vec, ys)
+			plt.xlabel("Number of samples")
 			plt.ylabel(ylbl)
 			plt.title(title)
 			#save .png of this graph
 			plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + pltstr)
-			#pickle (x,y) data of this graph
-			pickle.dump(estimates, open(config.gen_data_dir 
-					   + d 
-					   + "_"
-					   + str(nnp)
-					   + "_"
-					   + str(Tnum)
-					   + suffix, "wb"))
-
 			plt.show()
 			plt.close()
-			
+
+			# Pickle entropy data
+			pickle.dump(list(zip(num_neighbor_vec,entropy_vec)), open(config.gen_data_dir 
+																	  + d 
+																	  + "_"
+																	  + str(nnp)
+																	  + "_"
+																	  + str(Tnum)
+																	  + config.entropy_pickle_suffix, "wb"))
+
+			# Pickle avg nn data
+			pickle.dump(list(zip(num_neighbor_vec,avg_log_nn_vec)), open(config.gen_data_dir 
+																	  + d 
+																	  + "_"
+																	  + str(nnp)
+																	  + "_"
+																	  + str(Tnum)
+																	  + config.avgnn_pickle_suffix, "wb"))
+
+			# Pickle 
+	
 	
 				
 	# except ValueError:
