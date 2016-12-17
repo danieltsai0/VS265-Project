@@ -53,7 +53,7 @@ def estimate(*args):
 				Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
 
 				avg_log_nn = (1/len(Tp))*np.sum(vlog(Dstars))
-				entropy = util.entropy_est(k, avg_log_nn, num_neighbors) / k if is_ent=="t" else Dstar
+				entropy = util.entropy_est(k, avg_log_nn, num_neighbors) / k
 				
 				num_neighbor_vec.append(num_neighbors)
 				entropy_vec.append(entropy)
