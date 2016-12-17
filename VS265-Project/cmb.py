@@ -20,22 +20,23 @@ Image: PlanckFig_BW_map_no-out_12000px_CMB_cart.png
 def generate_cmb_patches():
 	"""Preprocess CMB like other images, real values 0-255", averaged all 3 BW channels (shouldn't change anything)"""
 	cmb = mpimg.imread("PlanckFig_BW_map_no-out_12000px_CMB_cart.png")
-	cmb = (cmb[:,:,0] + cmb[:,:,1] + cmb[:,:,2])/(3.)
+	cmb = cmb[:,:,0]
+	# cmb = (cmb[:,:,0] + cmb[:,:,1] + cmb[:,:,2])/(3.)
 	cmb = cmb*(255./np.max(cmb))
 
 	"""Crop to center 2000x4000"""
 	print(cmb.shape)
-	cmb = cmb[3000:5000,4000:8000]
+	cmb = cmb[3000:4998,4000:7999]
 	print(cmb.shape)
 	# print(cmb.shape)
 	# plt.imshow(cmb)
 	# plt.show
 	"""Generate ((2000x4000) / (nxn)) number of nxn patches"""
 	ret, n = [], 3 
-	m = np.arange(0, cmb.shape[1], n)
-	n = np.arange(0, cmb.shape[0], n)
-	for x in i:
-		for y in j:
+	r = np.arange(0, cmb.shape[0], n)
+	s = np.arange(0, cmb.shape[1], n)
+	for x in r:
+		for y in s:
 			patch = cmb[x:x+n,y:y+n]
 			ret.append(patch)
 			if x%100==0 and y%100==0:
@@ -46,18 +47,19 @@ def generate_cmb_patches():
 
 """Randomly chooses Np and Tp, since there's only one image to work with here."""
 def cmb_entropy(nnp,Tnum):
+	is_ent = "t"
+	d = "cmb"
 	with open(config.gen_data_dir + "cmb" + config.patches_pickle_suffix, "rb") as f:
 		cmb = pickle.load(f)	
+	
 	np.random.shuffle(cmb)
-
+	cmb = np.array(cmb)
 	Tp = cmb[0:Tnum]
 	Np = cmb[Tnum:Tnum+(2**nnp)]
-	print(Tp, Np)
 
 	print("T: ", Tnum, "out of", len(cmb))
 	print("N: ", 2**nnp, "out of", len(cmb) - Tnum)
 	print(Tp[0])
-
 
 	i = 0
 	k = len(Tp[0])**2
@@ -66,7 +68,6 @@ def cmb_entropy(nnp,Tnum):
 	for num_neighbors in np.power(2,np.arange(nnp)):
 		# 
 		Npcurr = Np[np.random.choice(len(Np), num_neighbors)]
-		print(Npcurr.shape)
 		Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
 
 		avg_log_nn = (1/len(Tp))*np.sum(vlog(Dstars))
@@ -105,7 +106,7 @@ def cmb_entropy(nnp,Tnum):
 	plt.close()
 
 	pickle.dump([entropy_vec, num_neighbor_vec], open(config.gen_data_dir 
-																	  + "cmb" 
+																	  + d
 																	  + "_"
 																	  + str(nnp)
 																	  + "_"
@@ -114,7 +115,7 @@ def cmb_entropy(nnp,Tnum):
 
 			# Pickle avg nn data
 	pickle.dump([avg_log_nn_vec, num_neighbor_vec], open(config.gen_data_dir 
-															  + "cmb"
+															  + d
 															  + "_"
 															  + str(nnp)
 															  + "_"
@@ -122,5 +123,5 @@ def cmb_entropy(nnp,Tnum):
 															  + config.avgnn_pickle_suffix, "wb"))
 
 vlog = np.vectorize(util.log)
-generate_cmb_patches()
-# cmb_entropy(17, 100)
+# generate_cmb_patches()
+cmb_entropy(17, 100)

@@ -23,7 +23,7 @@ def estimate(*args):
 
 	# try:
 		_, _, n_neighbors_pow, Tnum, is_ent, *tod = args
-		estimates, nnp, Tnum = [], int(n_neighbors_pow), int(Tnum)
+		nnp, Tnum = int(n_neighbors_pow), int(Tnum)
 
 		for d in tod:
 
