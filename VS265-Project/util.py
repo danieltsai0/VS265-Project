@@ -42,6 +42,7 @@ def log(x):
 	else:
 		return math.log(x, 2)
 
+
 """
 Estimates the entropy of a given set of distances.
 

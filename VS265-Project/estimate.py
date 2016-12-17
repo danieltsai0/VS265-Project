@@ -40,6 +40,7 @@ def estimate(*args):
 			
 			print("T: ", Tnum, "out of", totTp)
 			print("N: ", 2**nnp, "out of", totNp)
+			print(Tp[0])
 
 			# Generate distances for each target patch
 			i = 0
@@ -47,7 +48,7 @@ def estimate(*args):
 			num_neighbor_vec, entropy_vec, avg_log_nn_vec = [], [], []
 
 			for num_neighbors in np.power(2,np.arange(nnp)):
-				# 
+
 				Npcurr = Np[np.random.choice(len(Np), num_neighbors)]
 				Dstars = [util.find_nearest_neighbor(patch, Npcurr) for patch in Tp]
 
@@ -87,7 +88,7 @@ def estimate(*args):
 			plt.close()
 
 			# Pickle entropy data
-			pickle.dump(list(zip(num_neighbor_vec,entropy_vec)), open(config.gen_data_dir 
+			pickle.dump([entropy_vec, num_neighbor_vec], open(config.gen_data_dir 
 																	  + d 
 																	  + "_"
 																	  + str(nnp)
@@ -96,7 +97,7 @@ def estimate(*args):
 																	  + config.entropy_pickle_suffix, "wb"))
 
 			# Pickle avg nn data
-			pickle.dump(list(zip(num_neighbor_vec,avg_log_nn_vec)), open(config.gen_data_dir 
+			pickle.dump([avg_log_nn_vec, num_neighbor_vec], open(config.gen_data_dir 
 																	  + d 
 																	  + "_"
 																	  + str(nnp)

@@ -20,3 +20,29 @@ def graph_edit(d, nnp, Tnum):
 	plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + "_entropy_plot.png")
 
 graph_edit("pca", 17, 10000)
+
+def graph_multiple(tod, nnp, Tnum, basis):
+	datas = []
+	for d in tod:
+		path = gen_data_dir + d + "_" + nnp + "_" + Tnum + entropy_pickle_suffix
+		with open(path, "rb") as dataset:
+			datas.append(pickle.load(dataset))
+		dataset.close()
+
+	fig=plt.figure()
+	ax=fig.add_subplot(1,1,1)
+	for i in range(len(tod)):
+		ax.plt()
+	plt.set_xscale()
+	plt.set_yscale()
+	plt.xlabel()
+	plt.ylabel()
+	plt.set_title()
+	
+
+
+	ax1.scatter(x[:4], y[:4], s=10, c='b', marker="s", label='first')
+ax1.scatter(x[40:],y[40:], s=10, c='r', marker="o", label='second')
+plt.legend(loc='upper left');
+plt.show()
+	
