@@ -124,4 +124,4 @@ def cmb_entropy(nnp,Tnum):
 
 vlog = np.vectorize(util.log)
 # generate_cmb_patches()
-cmb_entropy(17, 100)
+cmb_entropy(19, 500)

@@ -7,23 +7,25 @@ import random
 Estimates entropy and relative dimension of a given dataset. 
 
 Arguments: 
+	basis_num: number of basis vectors to specify which recon data
 	n_neighbors_pow: used to exponentiate the number dos
 	Tnum: sets size of target set (87723 for gwn, 581405 for nat in paper)
 	do_entropy: if t, plots entropy, if f plots average log nearest neighbor distance
 	tod: type(s) of data being measured 
 
 Example calls:
-	python main.py estimate 17 100 t nat ica
-	python main.py estimate 17 100 f nat ica pca
+	python main.py estimate 64 17 100 t nat ica
+	python main.py estimate 128 17 100 f nat ica pca
 
-	Note that the order of the tod doesn't matter
+	Note that the order of the tod doesn't matter.
 """
 vlog = np.vectorize(util.log)
 def estimate(*args):
 
 	# try:
-		_, _, n_neighbors_pow, Tnum, is_ent, *tod = args
-		nnp, Tnum = int(n_neighbors_pow), int(Tnum)
+		_, _, basis, n_neighbors_pow, Tnum, is_ent, *tod = args
+		basis, nnp, Tnum = int(basis), int(n_neighbors_pow), int(Tnum)
+
 
 		for d in tod:
 
@@ -31,13 +33,16 @@ def estimate(*args):
 				print("Unknown type of data requested. Skipping entropy calculation for", d)
 				continue
 
+			if d == "nat":
+				basis=""
 			# Load patches 
-			Tp, Np = util.load_patches(d)
+			Tp, Np = util.load_patches(d, basis)
 			totTp = len(Tp)
 			totNp = len(Np)
 			Tp = Tp[np.random.choice(len(Tp), Tnum)]
 			Np = Np[np.random.choice(len(Np), np.power(2, nnp))]
 			
+			print("basis: ", basis)
 			print("T: ", Tnum, "out of", totTp)
 			print("N: ", 2**nnp, "out of", totNp)
 			print(Tp[0])
@@ -65,13 +70,13 @@ def estimate(*args):
 			if is_ent == "t":
 				ylbl = "Entropy (bits/pixel)"
 				pltstr = "_entropy_plot.png"
-				title = "Entropy vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
+				title = "Entropy vs. Number of Samples for " + str(d) + str(basis) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
 				ys = entropy_vec
 
 			elif is_ent == "f":
 				ylbl = "Average Log NN Distance"
 				pltstr = "_avg_nn_plot.png"
-				title = ylbl + " vs. Number of Samples for " + str(d) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
+				title = ylbl + " vs. Number of Samples for " + str(d) + str(basis) + " data, N: 2^" + str(nnp) + ", T: " + str(Tnum)
 				ys = avg_log_nn_vec
 
 
@@ -83,13 +88,14 @@ def estimate(*args):
 			plt.ylabel(ylbl)
 			plt.title(title)
 			#save .png of this graph
-			plt.savefig(d + "_" + str(nnp) + "_" + str(Tnum) + pltstr)
+			plt.savefig(d + str(basis) + "_" + str(nnp) + "_" + str(Tnum) + pltstr)
 			plt.show()
 			plt.close()
 
 			# Pickle entropy data
 			pickle.dump([entropy_vec, num_neighbor_vec], open(config.gen_data_dir 
 																	  + d 
+																	  + str(basis)
 																	  + "_"
 																	  + str(nnp)
 																	  + "_"
@@ -99,6 +105,7 @@ def estimate(*args):
 			# Pickle avg nn data
 			pickle.dump([avg_log_nn_vec, num_neighbor_vec], open(config.gen_data_dir 
 																	  + d 
+																	  + str(basis)
 																	  + "_"
 																	  + str(nnp)
 																	  + "_"

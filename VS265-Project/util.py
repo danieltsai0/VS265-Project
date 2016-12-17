@@ -26,8 +26,9 @@ def load_dataset(tod):
 
 	return data
 
-def load_patches(tod):
-	with open(config.gen_data_dir+tod+config.patches_pickle_suffix, "rb") as patchset:
+def load_patches(tod, basis):
+	basis = str(basis)
+	with open(config.gen_data_dir+tod+basis+config.patches_pickle_suffix, "rb") as patchset:
 		patches = pickle.load(patchset)
 		Tp, Np = patches["Tp"], patches["Np"]
 
@@ -177,7 +178,7 @@ def ica_reconst(images, R, n=None):
     im_vecs = (images.reshape(num_ims, im_size)).T #shape(im_size,num_ims)
 
     #train ica
-    ica = FastICA(n_components=n)
+    ica = FastICA(n_components=n, tol=0.001)
     basis = ica.fit_transform(im_vecs) #shape(im_size, n)
     pickle.dump(basis, open('data/ica_basis'+str(n), 'wb'))
 
