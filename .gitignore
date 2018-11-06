@@ -1,0 +1,14 @@
+# Data #
+########
+*.iml
+*.imc
+*_data.pickle
+*_patches.pickle
+Data/
+VS265-Project/data/
+
+# Extra files #
+###############
+*test*
+VS265-Project/__pycache__/
+

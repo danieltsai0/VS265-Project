@@ -1,0 +1,5 @@
+Things to do:
+
+- implement function that runs ICA/PCA and projects / reconstructs
+- run on natural images, ICA, PCA projected data
+- create graphs and data for presentation
